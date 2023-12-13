@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
     minLength: [8, "Password should be 8characters or more "],
     select: false,
   },
+  role: {
+    type: String,
+    default: "user",
+    enum: ["user", "admin"],
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

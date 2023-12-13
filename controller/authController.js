@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 const catchAsync = require("../utils/catchAsync");
 
 const jwtSign = (id) => {
@@ -76,3 +77,52 @@ exports.login = catchAsync(async (req, res, next) => {
   // if password is correct then send token
   createSendToken(user, 200, res);
 });
+
+exports.protect = catchAsync(async (req, res, next) => {
+  let token;
+  // 1. Getting token
+  if (req.cookies.token) {
+    token = req.cookies.token;
+  } else if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  // 2) Verify token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  // 3) Check if user still exists
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next(
+      new AppError(
+        "The user belonging to this token is no longer exists!!",
+        401
+      )
+    );
+  }
+
+  // 4) Check user changed password after the token was issued
+  // NEED TO IMPLEMENT LATER
+
+  // GRANT ACCESS USER TO PROTECTED ROUTE
+  req.user = currentUser;
+  next();
+});
+
+exports.restrictTo = (role) => {
+  return (req, res, next) => {
+    // if current user.role == user then return error
+    if (role !== req.user.role) {
+      return next(
+        new AppError(
+          "You do not have to permission to perform this action",
+          403
+        )
+      );
+    }
+    next();
+  };
+};
