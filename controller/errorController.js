@@ -8,7 +8,7 @@ const sendError = (err, req, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  console.log("error");
+  // console.log("error");
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
   sendError(err, req, res);
