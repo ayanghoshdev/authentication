@@ -31,9 +31,41 @@ exports.getAllTests = catchAsync(async (req, res, next) => {
     tests,
   });
 });
+// READ ONE
+exports.getSingleTest = catchAsync(async (req, res, next) => {
+  const { testId } = req.params;
+  if (!testId) return next(new AppError("testId not found in url params", 400));
+
+  const test = await Test.findById(testId);
+  if (!test) return next(new AppError("No test found", 404));
+
+  res.status(200).json({
+    success: true,
+    test,
+  });
+});
 
 // // UPDATE
-// exports.updateTest = catchAsync(async (req, res, next) => {});
+exports.updateTest = catchAsync(async (req, res, next) => {
+  const { testId } = req.params;
+  if (!testId) return next(new AppError("testId not found in url params", 400));
+
+  const { status } = req.body;
+
+  if (!status) return next(new AppError("status is required", 400));
+
+  const test = await Test.findById(testId);
+
+  if (!test) return next(new AppError("No test found", 404));
+
+  test.status = status;
+  await test.save();
+
+  res.status(200).json({
+    success: true,
+    test,
+  });
+});
 
 // // DELETE
 // exports.deleteTest = catchAsync(async (req, res, next) => {});

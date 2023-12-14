@@ -20,7 +20,7 @@ app.use(cors(corsOptions));
 
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/tests", testRoute);
-app.use("/api/v1/tests/notifications", notificationRoute);
+app.use("/api/v1/notifications/tests", notificationRoute);
 
 //TEST ROUTE
 app.get("/", (req, res) => {
