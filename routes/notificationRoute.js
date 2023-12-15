@@ -13,4 +13,12 @@ router
     notificationController.getAllNotifications
   );
 
+router
+  .route("/:notificationId")
+  .delete(
+    protect,
+    restrictTo("admin"),
+    notificationController.deleteOneNotifications
+  );
+
 module.exports = router;
