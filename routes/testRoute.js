@@ -4,10 +4,11 @@ const { protect, restrictTo } = require("../controller/authController");
 
 const router = express.Router();
 
+router.route("/").post(protect, testController.createTest);
+
 router
-  .route("/")
-  .post(protect, testController.createTest)
-  .get(testController.getAllTests);
+  .route("/admin")
+  .get(protect, restrictTo("admin"), testController.getAllTests);
 
 router
   .route("/:testId")
