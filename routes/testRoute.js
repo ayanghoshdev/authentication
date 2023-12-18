@@ -9,7 +9,10 @@ router
   .post(protect, testController.createTest)
   .get(protect, testController.getUserTests);
 
-router.route("/user/:testId").patch(protect, testController.updateTest);
+router
+  .route("/user/:testId")
+  .get(testController.getSingleTest)
+  .patch(protect, testController.updateTest);
 
 router
   .route("/admin")
@@ -17,6 +20,5 @@ router
 
 router
   .route("/admin/:testId")
-  .get(testController.getSingleTest)
   .patch(protect, restrictTo("admin"), testController.updateTestStatus);
 module.exports = router;
