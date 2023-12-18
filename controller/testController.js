@@ -2,6 +2,7 @@ const Test = require("../models/testModel");
 const Notification = require("../models/notificationModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+const mongoose = require("mongoose");
 
 // CREATE
 exports.createTest = catchAsync(async (req, res, next) => {
@@ -57,7 +58,7 @@ exports.getSingleTest = catchAsync(async (req, res, next) => {
 });
 
 // // UPDATE
-exports.updateTest = catchAsync(async (req, res, next) => {
+exports.updateTestStatus = catchAsync(async (req, res, next) => {
   const { testId } = req.params;
   if (!testId) return next(new AppError("testId not found in url params", 400));
 
@@ -75,6 +76,22 @@ exports.updateTest = catchAsync(async (req, res, next) => {
   res.status(200).json({
     success: true,
     test,
+  });
+});
+
+exports.updateTest = catchAsync(async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.testId))
+    return next(new AppError("Invalid test id", 400));
+
+  const updatedTest = await Test.findByIdAndUpdate(
+    req.params.testId,
+    req.body,
+    { new: true }
+  );
+  res.status(201).json({
+    success: true,
+    message: "Successfully updated.",
+    test: updatedTest,
   });
 });
 
