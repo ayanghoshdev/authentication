@@ -21,7 +21,14 @@ exports.deleteOneNotifications = catchAsync(async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.notificationId))
     return next(new AppError("Invalid notificaiton id", 400));
 
-  await Notification.deleteOne(req.params);
+  // const notification = await Notification.findById(req.params.notificationId);
+  // console.log(notification);
+
+  const notification = await Notification.findByIdAndDelete(
+    req.params.notificationId
+  );
+  if (!notification)
+    return next(new AppError("No notificaiton found with this id.", 404));
 
   res.status(200).json({
     success: true,

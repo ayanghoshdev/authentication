@@ -23,7 +23,7 @@ exports.createTest = catchAsync(async (req, res, next) => {
   });
 });
 
-// READ
+// READ All (admin)
 exports.getAllTests = catchAsync(async (req, res, next) => {
   const tests = await Test.find();
   res.status(200).json({
@@ -31,6 +31,17 @@ exports.getAllTests = catchAsync(async (req, res, next) => {
     tests,
   });
 });
+
+// Read User's all tests
+exports.getUserTests = catchAsync(async (req, res, next) => {
+  const tests = await Test.find({ user: req.user });
+  if (!tests) return next(new AppError("No test found", 404));
+  res.status(200).json({
+    success: true,
+    tests,
+  });
+});
+
 // READ ONE
 exports.getSingleTest = catchAsync(async (req, res, next) => {
   const { testId } = req.params;
