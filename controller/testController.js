@@ -16,7 +16,15 @@ exports.createTest = catchAsync(async (req, res, next) => {
 
   // Create test and notification
   const test = await Test.create({ ...req.body, user: req.user._id });
-  await Notification.create({ test: test._id });
+  const notification = await Notification.create({ test: test._id });
+
+  // req.socket.on("connection", (socket) => {
+  //   console.log(socket);
+  //   socket.emit("new-notification", notification);
+  // });
+  notification.test = test;
+  const io = req.app.get("socketio");
+  io.emit("new-notification", notification);
 
   await res.status(201).json({
     success: true,

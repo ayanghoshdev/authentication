@@ -1,6 +1,8 @@
-const app = require("./app");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const app = require("./app");
+const http = require("http");
+const socketIO = require("socket.io");
 
 dotenv.config();
 
@@ -18,7 +20,30 @@ mongoose.connect(db).then(() => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server = http.createServer(app);
+const io = socketIO(server, {
+  // transports: ["polling"],
+  cors: {
+    origin: ["http://localhost:5173", "http://localhost:8081"],
+  },
+});
+// app.use((req, res, next) => {
+//   req.io = io;
+//   return next();
+// });
+
+app.set("socketio", io);
+io.on("connection", (socket) => {
+  console.log("A user is connected " + socket.id);
+
+  socket.on("disconnect", () => {
+    console.log(`socket ${socket.id} disconnected`);
+  });
+
+  // Passing io to the req
+});
+
+server.listen(port, () => {
   console.log(`Server is running on http://127.0.0.1:${port}`);
 });
 
