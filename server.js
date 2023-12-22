@@ -12,7 +12,11 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-const db = process.env.LOCAL_DATABASE;
+// const db = process.env.LOCAL_DATABASE;
+const db = process.env.CLOUD_DATABASE.replace(
+  "<password>",
+  process.env.DB_PASS
+);
 
 // DATABASE CONNECTION
 mongoose.connect(db).then(() => {
