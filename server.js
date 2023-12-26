@@ -39,6 +39,10 @@ const io = socketIO(server, {
 app.set("socketio", io);
 io.on("connection", (socket) => {
   console.log("A user is connected " + socket.id);
+  // Join romm based on userId
+  socket.on("join", function (id) {
+    socket.join(id);
+  });
 
   socket.on("disconnect", () => {
     console.log(`socket ${socket.id} disconnected`);
