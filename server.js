@@ -28,7 +28,7 @@ const server = http.createServer(app);
 const io = socketIO(server, {
   // transports: ["polling"],
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:8081"],
+    origin: "*",
   },
 });
 // app.use((req, res, next) => {
