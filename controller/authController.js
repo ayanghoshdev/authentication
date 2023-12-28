@@ -88,6 +88,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
+  } else {
+    return next(new AppError("Please login", 401));
   }
 
   // 2) Verify token
@@ -95,6 +97,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // 3) Check if user still exists
   const currentUser = await User.findById(decoded.id);
+  // console.log(currentUser);
   if (!currentUser) {
     return next(
       new AppError(

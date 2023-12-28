@@ -6,6 +6,7 @@ const userRoute = require("./routes/userRoute");
 const testRoute = require("./routes/testRoute");
 const notificationRoute = require("./routes/notificationRoute");
 const chatRoute = require("./routes/chatRoute");
+const conversationRoute = require("./routes/conversationRoute");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/tests", testRoute);
 app.use("/api/v1/notifications/tests", notificationRoute);
 app.use("/api/v1/chat", chatRoute);
+app.use("/api/v1/conversations", conversationRoute);
 
 //TEST ROUTE
 app.get("/", (req, res) => {

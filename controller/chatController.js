@@ -58,10 +58,3 @@ exports.userChatHistory = catchAsync(async (req, res, next) => {
     history: chatHistory,
   });
 });
-
-// // Admin history
-// exports.adminChatHistory = catchAsync(async (req, res, next) => {
-//   res.status(200).json({
-//     success: true,
-//   });
-// });

@@ -36,10 +36,11 @@ const io = socketIO(server, {
 //   return next();
 // });
 
-app.set("socketio", io);
+app.set("socketio", io); // passign io to the routes
+
 io.on("connection", (socket) => {
   console.log("A user is connected " + socket.id);
-  // Join romm based on userId
+  // Join romm based on conversatonId
   socket.on("join", function (id) {
     socket.join(id);
   });
