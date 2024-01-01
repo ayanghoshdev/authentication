@@ -54,7 +54,7 @@ exports.startConversation = catchAsync(async (req, res, next) => {
     //3. If participant send by user then check user is exist or not
 
     // validate paritcipant's userId
-    if (!mongoose.Types.ObjectId.isValid(participant.userId))
+    if (!mongoose.isValidObjectId(participant.userId))
       return next(new AppError("!Invalid user id for participant.", 400));
 
     const existingUser = await User.findById(participant.userId);
@@ -103,7 +103,7 @@ exports.sendMessages = catchAsync(async (req, res, next) => {
     return next(new AppError("conversationId id is required!."));
 
   // validate paritcipant's userId
-  if (!mongoose.Types.ObjectId.isValid(conversationId))
+  if (!mongoose.isValidObjectId(conversationId))
     return next(new AppError("!Invalid conversationId.", 400));
 
   if (!message) return next(new AppError("!Message was not provied."));
@@ -155,7 +155,11 @@ exports.getUserConversations = catchAsync(async (req, res, next) => {
 // Get single conversations deatils
 exports.getSingleConversation = catchAsync(async (req, res, next) => {
   const { conversationId } = req.params;
-  if (!conversationId) return next(new AppError("conversationId is required."));
+  if (!conversationId)
+    return next(new AppError("conversationId is required.", 400));
+
+  if (!mongoose.isValidObjectId(conversationId))
+    return next(new AppError("Invalid conversationId!", 400));
 
   const conversation = await Conversation.findById(conversationId);
   res.status(200).json({
