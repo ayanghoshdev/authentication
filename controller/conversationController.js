@@ -98,6 +98,10 @@ exports.startConversation = catchAsync(async (req, res, next) => {
 // Send messages
 exports.sendMessages = catchAsync(async (req, res, next) => {
   const { conversationId, message } = req.body;
+
+  if (!conversationId)
+    return next(new AppError("conversationId id is required!."));
+
   // validate paritcipant's userId
   if (!mongoose.Types.ObjectId.isValid(conversationId))
     return next(new AppError("!Invalid conversationId.", 400));

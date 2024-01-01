@@ -108,6 +108,3 @@ socket.on("connect", () => {
       console.log(chat);
     });
 ```
-make changes successfully 
-new changes 
-new changes after git config
