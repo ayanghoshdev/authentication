@@ -139,3 +139,27 @@ exports.sendMessages = catchAsync(async (req, res, next) => {
     conversation: updatedConversation,
   });
 });
+
+// Get all conversations
+exports.getUserConversations = catchAsync(async (req, res, next) => {
+  const userConversations = await Conversation.find({
+    "participants.userId": req.user._id,
+  });
+
+  res.status(200).json({
+    success: true,
+    conversations: userConversations,
+  });
+});
+
+// Get single conversations deatils
+exports.getSingleConversation = catchAsync(async (req, res, next) => {
+  const { conversationId } = req.params;
+  if (!conversationId) return next(new AppError("conversationId is required."));
+
+  const conversation = await Conversation.findById(conversationId);
+  res.status(200).json({
+    success: true,
+    conversation,
+  });
+});

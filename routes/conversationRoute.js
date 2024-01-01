@@ -4,7 +4,15 @@ const conversationController = require("../controller/conversationController");
 
 const router = express.Router();
 
-router.route("/").post(protect, conversationController.startConversation);
+router
+  .route("/")
+  .get(protect, conversationController.getUserConversations)
+  .post(protect, conversationController.startConversation);
+
+router
+  .route("/:conversationId")
+  .get(protect, conversationController.getSingleConversation);
+
 router.route("/messages").post(protect, conversationController.sendMessages);
 
 module.exports = router;
